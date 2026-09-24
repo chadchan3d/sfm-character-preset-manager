@@ -1,0 +1,45 @@
+# Python/runtime byproducts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Logs and temporary output
+*.log
+*.tmp
+*.temp
+*.bak
+*.old
+*.swp
+*~
+
+# Archives and release staging
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+
+# Editor/OS metadata
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Raw/private development evidence
+handoff/
+handoffs/
+evidence/
+private/
+_private/
+tmp/
+staging/
+*_Handoff_*.md
+*_Handoff_Package_*.md
+*_RefactorLedger_*.md
+*_RuntimeAssessment_*.md
+*_StaticCheckpoint_*.md
+*_StaticRefinementAudit_*.md
+*_StaticDeadCodeInventory_*.csv
+CPM_ASTRA_*.md
