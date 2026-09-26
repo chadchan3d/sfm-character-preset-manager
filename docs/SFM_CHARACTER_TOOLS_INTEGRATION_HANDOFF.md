@@ -1,7 +1,7 @@
 # Character Preset Manager → SFM Character Tools Integration Handoff
 
-**Status:** Controlling CPM convergence handoff  
-**Checkpoint purpose:** Documentation-only architecture checkpoint before external adversarial review  
+**Status:** Controlling CPM convergence handoff
+**Checkpoint purpose:** Documentation-only architecture checkpoint before external adversarial review
 **Implementation status:** No CPM integration code has been written at this checkpoint
 
 This document supersedes earlier CPM → SFM Character Tools handoff drafts and review addenda. It is intended to stand alone.
