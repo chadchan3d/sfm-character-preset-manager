@@ -16,6 +16,8 @@ The core seam remains approved:
 
 The review found no correctness reason to move the CPM projection into the shared authority package or to change the qualified shared build.
 
+The full review is archived verbatim at `docs/reviews/CPM_CONVERGENCE_ADVERSARIAL_REVIEW.md`. That archive is the detailed source for the corrections below; where this handoff and that review differ, the review governs.
+
 This revision incorporates the corrections:
 
 - operation-bound authority contexts replace the single release-after-planning model (§14);
@@ -529,6 +531,13 @@ Leases are deterministically released at the operation-specific boundary defined
 
 No CPM lease should survive ordinary UI idle time.
 
+### Additional lifetime notes
+
+- If G2 has no usable sidecar, CPM remains explicitly unavailable; do not restore G1 as mutation authority or synthesize Review misses.
+- Clear released lease/view references: a released `ViewLease` still contains its `.view` reference.
+- The CPM builder callback remains synchronous and avoids Qt event pumping.
+- Do not copy Normalizer's J protected-file-handle mechanism into CPM merely for symmetry: CPM's writes never invoke native Rebuild to reread the Master, so require fresh authorization at operation entry, no yield between authorization/planning and mutation entry, and no new interpretation after a yield -- readback and recovery remain tied to the completed operation.
+
 ## 12. Initial scope construction
 
 The intended sequence is:
@@ -595,6 +604,10 @@ If the old generation no longer matches:
 - release its build lease;
 - republish Body / Expression / Review state;
 - require a new user action.
+
+### Save/Update prompt-boundary timing
+
+Save and Update currently check scope before opening a modal prompt, then revalidate scene context afterward. That ordering does not prove authority freshness at the point that matters. Place authorization after user prompts: the migration's `expected_generation` acquisition belongs after prompt return and before semantic work, not before the prompt opens.
 
 ## 14. Operation-bound authority contexts and release boundaries
 
@@ -717,6 +730,13 @@ If target 1 committed under G1 and G2 becomes current before target 2:
 - a later user-initiated Fit may begin under G2.
 
 One Fit must never silently span multiple semantic generations.
+
+### Additional corrections
+
+- Keep `Gfit` separate from the existing integer `fit_generation`, which is a callback-cancellation identity, not a semantic generation.
+- Perform the `Gfit` check after any foreign-modal suspension ends.
+- On mismatch before the next target, stop the remaining targets and retain truthful committed/unattempted accounting.
+- Uncovered post-stage vocabulary fails rather than triggering an implicit G2 acquisition.
 
 ## 16. Canonical bootstrap/import
 
@@ -847,7 +867,7 @@ Oracles:
 - ordinary resolved and MasterUnknown/absent cases compare against G18AN;
 - conflict cases compare against independent expected fixtures, because G18AN's adapter rejects a provider result type its pinned provider returns.
 
-Require parity for:
+Answer parity requires:
 
 - family status;
 - wrapper-stripped resolved path;
@@ -860,10 +880,28 @@ Require parity for:
 - operation;
 - folded-resolved count;
 - accepted Body literals;
-- accepted Expression literals;
-- final semantic snapshot signature.
+- accepted Expression literals.
+
+Signature parity requires (matches `semantic_snapshot_signature()`; `occurrence_count` belongs to answer parity above and is not currently part of this signature -- do not conflate the two gates):
+
+- literal;
+- live-binding count;
+- live shapes;
+- ambiguity;
+- status;
+- match kind;
+- path;
+- destinations;
+- spellings;
+- class;
+- operation;
+- deterministic ordering.
+
+An exact spelling inside a conflicting family remains a conflict.
 
 No synthetic outer wrapper may leak to CPM.
+
+**Fit target-side warning parity:** preserve the exact existing warning classification for Fit -- unmatched target controls resolve to exact `Body Morphs` or `Clothing`, never broadened to arbitrary descendants and never omitted because the correspondence is structural.
 
 **Same-fold/different-exact-query reuse (decisive):**
 
@@ -919,7 +957,8 @@ Prove:
 - late helpers consume that context;
 - no late helper reopens a global provider path after release;
 - Apply postcommit and rollback verification complete without reacquiring authority;
-- a Review scope rebuild uses a separate fresh acquisition.
+- a Review scope rebuild uses a separate fresh acquisition;
+- Reclassify reports the successful durable edit separately from the resulting rebuilt classification.
 
 ### Suite 4 — Fit continuation and failure
 
@@ -1003,7 +1042,8 @@ Exercise enough existing functionality to prove the seam reaches qualified mecha
 - Body Save or Update;
 - changed/no-op Body Apply;
 - representative Expression Apply;
-- native Undo.
+- native Undo;
+- a Fit target with relevant vocabulary absent from the source.
 
 ### Review
 
@@ -1028,6 +1068,15 @@ Only healthy absence may be reviewable.
 - CPM rebuilds G2 scope;
 - original action does not replay automatically.
 
+### Generation change during a Save/Update prompt
+
+- open the Save or Update modal prompt under G1;
+- change authority to G2 while that prompt is open;
+- confirm the prompt;
+- the post-prompt `expected_generation` acquisition rejects the stale G1 expectation before any write;
+- no write occurs under the stale generation;
+- current-scope refresh follows, with no replay of the original action.
+
 ### Clothing Fit generation transition
 
 - start Fit under G1;
@@ -1051,6 +1100,10 @@ During CPM convergence prove only:
 - one already-qualified representative Normalizer operation remains usable.
 
 Broader cross-consumer workflow qualification belongs to K.
+
+### Resource measurement
+
+Measure CPM's actual new scope/projection retention and replacement peak during these runs. Broker accounting excludes CPM-owned scope copies; it cannot establish their cost by itself.
 
 ## 22. Implementation sequence and remaining CPM blockers before K
 
