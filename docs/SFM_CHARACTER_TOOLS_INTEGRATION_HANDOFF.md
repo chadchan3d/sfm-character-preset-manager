@@ -1,10 +1,38 @@
 # Character Preset Manager → SFM Character Tools Integration Handoff
 
-**Status:** Controlling CPM convergence handoff
-**Checkpoint purpose:** Documentation-only architecture checkpoint before external adversarial review
+**Status:** Controlling CPM convergence implementation specification
+**Checkpoint purpose:** Documentation-only checkpoint incorporating the external adversarial review (verdict: ACCEPT WITH CORRECTIONS)
 **Implementation status:** No CPM integration code has been written at this checkpoint
 
 This document supersedes earlier CPM → SFM Character Tools handoff drafts and review addenda. It is intended to stand alone.
+
+## Adversarial review outcome
+
+The external adversarial review of the previous checkpoint returned **ACCEPT WITH CORRECTIONS**.
+
+The core seam remains approved:
+
+> unchanged canonical broker → CPM-owned `cpm_compat_v1` projection → exact-literal interpretation → existing CPM semantics
+
+The review found no correctness reason to move the CPM projection into the shared authority package or to change the qualified shared build.
+
+This revision incorporates the corrections:
+
+- operation-bound authority contexts replace the single release-after-planning model (§14);
+- Clothing Fit retains its stage lease through post-stage verification (§15);
+- G18AN is not the sole oracle for provider-native conflicts (§4, §7, §20);
+- CPM compatibility identity excludes broker-local counters (§11);
+- CPM builder callback qualification obligations are explicit (§6);
+- `estimated_bytes` covers all retained view data, not only family rows (§9);
+- the broad parity plan is replaced by four focused qualification suites (§20);
+- the implementation sequence is corrected (§22).
+
+Maintained without change:
+
+- the CPM repository remains canonical for CPM;
+- the shared authority repository remains unchanged;
+- no Normalizer package modification;
+- no K work yet.
 
 ## 1. Product architecture and migration objective
 
@@ -62,6 +90,7 @@ Historical material that says the shared authority is not yet wired into a produ
 
 The authority migration sits above already-qualified CPM mechanics. Absent contradictory new evidence, do not reopen:
 
+- Normalizer F/G/I/J closure;
 - RC7 native mutation sequencing;
 - preflight before Undo creation;
 - no-op-before-Undo behavior;
@@ -88,7 +117,9 @@ The authority migration must preserve these mechanics rather than treating them 
 
 ## 4. Current G18AN authority behavior to preserve
 
-G18AN's current development-era provider path is not the final production seam, but its consumer semantics are the migration oracle.
+G18AN's current development-era provider path is not the final production seam, but its consumer semantics are the migration oracle for ordinary resolution, fold matching, healthy absence, wrapper paths, and snapshot/signature behavior.
+
+G18AN is **not** the sole oracle for provider-native conflicts; see §7 (Conflict) and Suite 1 in §20.
 
 For each exact queried flex literal, the existing answer contract carries:
 
@@ -192,6 +223,21 @@ It:
 
 The adapter may use the pinned shared package's core coverage/view types and broker-supplied provider callback protocol. That is an intentional dependency on the exact API/build CPM verifies at startup, not a second authority implementation.
 
+### Callback qualification obligations
+
+The broker's builder extension seam is approved, but the broker does not deeply validate consumer callbacks. Callback correctness is therefore a CPM qualification obligation.
+
+The CPM builder must prove:
+
+- requested vocabulary equals declared vocabulary;
+- coverage keys match the requested folds;
+- the returned payload is fully detached;
+- the payload contains no provider references;
+- no iterators, closures, or generators retain provider or authority state;
+- `estimated_bytes` is conservative (§9);
+- unsupported provider results fail closed;
+- partial healthy results are never published as a complete view.
+
 ## 7. Broker-cached CPM projection is fold-family based
 
 The accepted broker cache identifies a detached view using the effective combination of:
@@ -253,6 +299,14 @@ Whatever provider-native representation denotes a fold family with multiple dest
 - family `occurrence_count`.
 
 CPM must not depend on whether the provider internally represented this as a conflict object or as occurrence rows spanning multiple destinations.
+
+G18AN cannot serve as the sole oracle for this normalization: its current adapter rejects a provider result type that its pinned provider returns. Therefore:
+
+- ordinary Hit / MasterUnknown parity is compared against G18AN;
+- conflict parity is compared against independent expected fixtures;
+- provider-native conflict translation is an adapter qualification requirement.
+
+The CPM conflict taxonomy itself does not change.
 
 ### Healthy absence
 
@@ -340,7 +394,13 @@ The broker remains responsible for:
 - authorization;
 - leases.
 
-The CPM adapter's `estimated_bytes` covers only the detached fold-family payload retained by the broker.
+The CPM adapter's `estimated_bytes` must conservatively cover everything the broker retains for the view:
+
+- the detached semantic payload;
+- coverage storage;
+- any other retained view data.
+
+Counting only family rows under-reports retained cost and is not acceptable.
 
 Later exact-literal answers, live-binding data, semantic classes, Review overlays, and semantic snapshot/signature state belong to CPM's pure scope and are not part of broker retained-view accounting.
 
@@ -441,15 +501,31 @@ It does **not** retain a broker lease merely because the character remains selec
 
 This is detached Python state.
 
+### Compatibility identity
+
+CPM compatibility identity uses only:
+
+- Master SHA;
+- CPM projection identity (`cpm_compat_v1`);
+- CPM policy identity (semantic policy revision).
+
+Do not map any of the following into CPM compatibility identity:
+
+- broker cohort IDs;
+- provider-open counters;
+- artifact IDs.
+
+Reopening the same semantic authority must not invalidate a valid CPM scope. Broker-local counters may remain in diagnostics only.
+
 ### Short broker leases
 
 A lease exists only while CPM is consuming a shared view for a bounded authority operation, such as:
 
 - initial scope construction;
 - action-boundary freshness/reauthorization;
-- a Clothing Fit target boundary.
+- a Clothing Fit target stage.
 
-Leases are deterministically released.
+Leases are deterministically released at the operation-specific boundary defined in §14.
 
 No CPM lease should survive ordinary UI idle time.
 
@@ -500,8 +576,9 @@ If acquisition succeeds under the same expected generation:
 - take a short lease;
 - verify authorization and requested coverage;
 - perform the bounded semantic planning required by the action;
-- release the lease;
-- continue using detached CPM state.
+- capture the CPM Operation Authority Context (§14);
+- release the lease at that operation's release boundary (§14);
+- continue from detached CPM state, with late helpers consuming the captured context.
 
 A complete scope rebuild is not required merely to prove the same generation is still current.
 
@@ -519,27 +596,78 @@ If the old generation no longer matches:
 - republish Body / Expression / Review state;
 - require a new user action.
 
-## 14. Astra challenge point: lease release before native mutation
+## 14. Operation-bound authority contexts and release boundaries
 
-The proposed migration boundary is:
+The previous checkpoint proposed a single rule: release the short broker lease after planning and finish the mutation from detached state. Review showed this overstates how detached CPM state currently is.
 
-> After successful fresh expected-generation acquisition and all semantic planning required by the operation, CPM may release the short broker lease and allow the already-planned bounded native/storage mutation to finish from detached state.
+Do not state or implement "all operations release authority after planning."
 
-The rationale is that such a mutation should not reread authority after planning, and the next semantic boundary performs another fresh generation proof.
+### Remaining authority dependencies
 
-This boundary is **not declared conclusively proven by this handoff**.
+Four paths still reach provider or authority metadata after planning:
 
-Astra must independently attack it operation by operation.
+- Clothing Fit queries target vocabulary outside the selected-character scope;
+- Fit performs semantic verification after staging;
+- Apply postcommit and rollback verification revisit provider helpers;
+- Save and Review reach provider metadata through persistence helpers.
 
-Specifically, determine whether after the proposed lease-release point any path:
+### CPM Operation Authority Context
 
-- performs another semantic lookup;
-- depends on provider/view lifetime;
-- schedules a callback that still requires authority;
-- can reinterpret pending semantic work after generation replacement;
-- lacks all required detached planning state.
+CPM uses bounded authority contexts. Semantic planning may detach facts, but any late helper that currently depends on authority metadata must consume the captured operation context rather than reopening a global provider path.
 
-If any migrated operation still needs authority after the proposed release point, move that operation's release boundary later. Do not expand lease lifetime globally without evidence.
+A CPM Operation Authority Context contains:
+
+- Master SHA;
+- broker generation/provenance identity;
+- projection contract identity;
+- resolved semantic membership;
+- persistence descriptor facts;
+- operation baselines.
+
+Late Save, Update, Apply, and Review helpers consume this context. None may implicitly reacquire global authority.
+
+### Operation-specific release rules
+
+**Body Save / Expression Save**
+
+Release after:
+
+- current-generation authorization;
+- membership resolution;
+- persistence descriptor capture.
+
+Release happens before the durable write. Late persistence helpers must not reacquire global authority.
+
+**Body Update / Expression Update**
+
+Same rule as Save: detached semantic/capture planning, operation context retained, durable replacement afterward.
+
+**Body Apply / Expression Apply**
+
+Release only after:
+
+- the detached mutation plan exists;
+- the operation context is captured;
+- postcommit and rollback verification dependencies are resolved into that context.
+
+Rollback verification must not silently reopen authority.
+
+**Review / Reclassify**
+
+Release after:
+
+- healthy-miss eligibility is established;
+- persistence facts are captured.
+
+If a later scope rebuild is needed, it uses a separate fresh acquisition rather than extending the original lease.
+
+**Clothing Fit**
+
+See §15. Fit is the case where a source-only scope is insufficient, so the first migration retains the stage lease through post-stage verification.
+
+### Rule for later findings
+
+If a migrated operation is found to need authority after its release point, move that operation's release boundary later or capture the missing facts into its context. Do not expand lease lifetime globally.
 
 ## 15. Clothing Fit generation rule
 
@@ -555,17 +683,27 @@ The existing Fit mechanics remain:
 - one changed target per native transaction/Undo;
 - structural/native target correspondence.
 
+### Stage lease rules
+
+The first migration retains each target's stage lease through post-stage verification:
+
+- target vocabulary must be included in the request, because it lies outside the selected-character scope;
+- planning and verification remain pinned to Gfit;
+- the lease is released before the next target is scheduled;
+- a lease is never held across queued UI stages.
+
 ### If generation remains Gfit
 
 For the target:
 
-- acquire/reuse `cpm_compat_v1`;
-- take a short lease;
+- acquire/reuse `cpm_compat_v1` with the target's vocabulary included in the request;
+- take a stage lease;
 - verify coverage/authorization;
 - perform target semantic planning under Gfit;
-- release the lease at the boundary ultimately accepted by Astra review;
 - run the existing target mutation;
-- queue the next target.
+- perform post-stage semantic verification under the same lease, still pinned to Gfit;
+- release the lease;
+- only then queue the next target.
 
 ### If generation changes between targets
 
@@ -645,6 +783,13 @@ If current authority cannot establish the accepted semantic set, semantic-depend
 - a long-lived CPM lease delaying retire/drain.
 - Clothing Fit switching generations between targets.
 - old development-provider paths remaining accidentally reachable as silent production fallback.
+- late Save/Update/Apply/Review helpers reopening a global provider path instead of consuming operation context.
+- rollback verification silently reacquiring authority.
+- a source-only Fit scope missing target vocabulary.
+- a Fit lease held across queued UI stages.
+- broker cohort IDs, provider-open counters, or artifact IDs leaking into CPM compatibility identity.
+- `estimated_bytes` counting only family rows.
+- partial healthy builder results being published.
 
 ### Not migration hazards
 
@@ -676,20 +821,31 @@ Do not re-propose these superseded approaches without new evidence:
 - complex nested preset dictionaries retained in Qt `UserRole`;
 - reopening the already-resolved multi-second Body Save investigation.
 
-## 20. CPM convergence qualification gates
+## 20. CPM convergence qualification
 
-The following gates belong to CPM convergence before K.
+The following qualification belongs to CPM convergence before K.
 
-### Gate C1 — fold-family projection parity
+The earlier broad parity plan (former gates C1–C6, C11, and C12) is replaced by four focused suites. Boundary gates C7–C10 are carried forward.
 
-For representative:
+### Suite 1 — Projection and semantic parity
 
-- unique family;
-- fold-only query family;
+Cover:
+
+- unique families;
+- aliases;
+- exact and folded queries;
+- duplicate occurrences;
 - healthy absence;
-- multi-destination conflict;
+- conflict;
+- wrapper paths (Face, `Body Morphs`, Clothing, nested Other, conflict paths);
+- same-fold/different-exact-query cache reuse;
+- `cpm_compat_v1` / `cpm_compat_v2` cache separation;
+- final semantic snapshot/signature parity.
 
-compare the new cached family facts against the G18AN authority facts.
+Oracles:
+
+- ordinary resolved and MasterUnknown/absent cases compare against G18AN;
+- conflict cases compare against independent expected fixtures, because G18AN's adapter rejects a provider result type its pinned provider returns.
 
 Require parity for:
 
@@ -697,53 +853,9 @@ Require parity for:
 - wrapper-stripped resolved path;
 - destinations;
 - actual Master spellings;
-- occurrence count.
-
-### Gate C2 — exact-answer reconstruction parity
-
-For each exact live literal:
-
-- obtain its folded family;
-- reconstruct `query_literal`;
-- reconstruct `match_kind`;
-- materialize the full G18AN-compatible answer.
-
-Require parity for:
-
+- occurrence count;
 - query literal;
-- status;
-- match kind;
-- resolved path;
-- destinations;
-- spellings;
-- occurrence count.
-
-### Gate C3 — wrapper/path parity
-
-Prove no synthetic outer wrapper leaks to CPM.
-
-Representative Face, `Body Morphs`, Clothing, nested Other, and conflict paths must match G18AN's representation exactly.
-
-### Gate C4 — provider-native conflict normalization
-
-Exercise the current shared provider's conflict representation and prove it becomes one CPM fold-family conflict with:
-
-- `resolved_path = None`;
-- complete normalized destinations;
-- complete Master spellings;
-- correct occurrence count.
-
-The later exact query reconstructs exact/ASCII-fold match kind independently.
-
-### Gate C5 — final semantic snapshot/signature parity
-
-Using equivalent live binding fixtures, require migrated CPM semantic scope to match G18AN for:
-
-- semantic status;
 - reconstructed match kind;
-- resolved path;
-- destinations;
-- Master spellings;
 - semantic class;
 - operation;
 - folded-resolved count;
@@ -751,18 +863,73 @@ Using equivalent live binding fixtures, require migrated CPM semantic scope to m
 - accepted Expression literals;
 - final semantic snapshot signature.
 
-### Gate C6 — broker requested-vocabulary/resource-accounting proof
+No synthetic outer wrapper may leak to CPM.
+
+**Same-fold/different-exact-query reuse (decisive):**
+
+1. Choose exact literal A and fold F.
+2. Acquire `cpm_compat_v1` for F.
+3. Lease the view.
+4. Materialize A's exact G18AN-compatible answer.
+5. Release the lease.
+6. Request a different exact literal B where `fold(A) == fold(B) == F`.
+7. Require the broker to be able to reuse the same cached fold-family view.
+8. Lease that reused view.
+9. Materialize B independently from B + the cached family facts.
+10. Release.
+
+Require for B:
+
+- `query_literal == B`;
+- `match_kind` is recomputed correctly for B;
+- status is correct;
+- paths/destinations are correct;
+- Master spellings are correct;
+- occurrence count is correct;
+- resulting G18AN semantic snapshot/signature matches the old provider.
+
+The suite fails if exact-query-dependent information has leaked into the cached projection.
+
+**Projection-version separation:**
+
+Using the same generation and folded coverage, `cpm_compat_v1` must not satisfy a `cpm_compat_v2` request. A fixture consumer identity is sufficient; no real v2 implementation is required.
+
+### Suite 2 — Callback ownership
 
 Prove:
 
-- consumer kind is `cpm_compat_v1`;
-- exact folded request set is declared;
-- request scale is accurate;
-- broker admission receives the real requested vocabulary;
-- projection coverage covers every requested fold;
-- missing requested coverage fails closed;
-- Uncovered never becomes absent;
+- the broker invokes the CPM builder through the approved seam;
+- declared, requested, and covered vocabulary agree exactly;
+- request scale is accurate and broker admission receives the real requested vocabulary;
+- unsupported provider results fail closed;
+- partial healthy results are not published;
+- missing requested coverage fails closed, and Uncovered never becomes absent;
+- the broker closes the provider after the callback;
+- no provider, iterator, closure, or generator is retained by the payload;
+- `estimated_bytes` includes detached semantic payload, coverage storage, and retained view data;
 - no production path opens authority outside the broker.
+
+### Suite 3 — Action boundary routing
+
+Instrument Save, Update, Apply, and Review/Reclassify.
+
+Prove:
+
+- each operation captures a CPM Operation Authority Context before its release point;
+- late helpers consume that context;
+- no late helper reopens a global provider path after release;
+- Apply postcommit and rollback verification complete without reacquiring authority;
+- a Review scope rebuild uses a separate fresh acquisition.
+
+### Suite 4 — Fit continuation and failure
+
+Prove:
+
+- target-only vocabulary is requested and covered;
+- planning and post-stage verification are pinned to Gfit;
+- the stage lease is released before the next target is scheduled;
+- no lease is held across queued UI stages;
+- a generation change before target two prevents any target-two mutation.
 
 ### Gate C7 — AuthorityUnavailable boundary
 
@@ -788,6 +955,7 @@ Prove:
 - pure scope survives lease release;
 - ordinary UI idle holds no CPM lease;
 - action reauthorization uses another short lease;
+- each operation releases at its defined boundary (§14);
 - normal paths return outstanding CPM lease count to baseline;
 - release failure uses the broker's durable unreleased-lease mechanism rather than GC dependence.
 
@@ -812,41 +980,6 @@ Prove:
 - API/build identities match;
 - runtime is canonical;
 - CPM and Normalizer obtain the same process broker.
-
-### Gate C11 — mandatory same-fold/different-exact-query cache reuse
-
-This gate is decisive.
-
-1. Choose exact literal A and fold F.
-2. Acquire `cpm_compat_v1` for F.
-3. Lease the view.
-4. Materialize A's exact G18AN-compatible answer.
-5. Release the lease.
-6. Request a different exact literal B where `fold(A) == fold(B) == F`.
-7. Require the broker to be able to reuse the same cached fold-family view.
-8. Lease that reused view.
-9. Materialize B independently from B + the cached family facts.
-10. Release.
-
-Require for B:
-
-- `query_literal == B`;
-- `match_kind` is recomputed correctly for B;
-- status is correct;
-- paths/destinations are correct;
-- Master spellings are correct;
-- occurrence count is correct;
-- resulting G18AN semantic snapshot/signature matches the old provider.
-
-The gate must fail if exact-query-dependent information has leaked into the cached projection.
-
-### Gate C12 — projection-version cache separation
-
-Using the same generation and folded coverage, prove:
-
-- `cpm_compat_v1` cannot satisfy a `cpm_compat_v2` request.
-
-No real v2 implementation is required; a fixture consumer identity is sufficient.
 
 ## 21. Minimum real-SFM CPM convergence tests
 
@@ -900,6 +1033,7 @@ Only healthy absence may be reviewable.
 - start Fit under G1;
 - commit target 1;
 - change to G2 before target 2;
+- no CPM lease remains held between targets;
 - target-2 G1 proof fails;
 - target 2 does not mutate;
 - Fit stops;
@@ -918,20 +1052,29 @@ During CPM convergence prove only:
 
 Broader cross-consumer workflow qualification belongs to K.
 
-## 22. Remaining CPM blockers before K
+## 22. Implementation sequence and remaining CPM blockers before K
 
-After the authority seam is implemented, remaining CPM convergence work includes:
+### Implementation sequence
 
-1. pass all adapter/cache/signature parity gates;
-2. pass broker accounting/coverage gates;
-3. pass canonical import/broker identity gate;
-4. pass short-lease/freshness/generation-transition gates;
-5. pass Fit generation-interruption test;
-6. deliberately qualify rollback-verification failure for Body/Expression Apply;
-7. deliberately qualify rollback-verification failure for Clothing Fit;
-8. remove or isolate historical development authority machinery only after the new seam passes;
-9. remove unnecessary diagnostic/development logging;
-10. run focused post-cleanup regression.
+1. Implement the CPM-owned family projection and exact-answer interpreter.
+2. Wire canonical bootstrap and the pure idle scope.
+3. Introduce the CPM Operation Authority Context.
+4. Integrate Clothing Fit per target.
+5. Run the focused qualification suites and carried-forward gates (§20).
+6. Only then begin K.
+
+### Remaining blockers before K
+
+After the seam is implemented:
+
+1. pass Suites 1–4;
+2. pass gates C7–C10;
+3. pass the Fit generation-interruption test;
+4. deliberately qualify rollback-verification failure for Body/Expression Apply;
+5. deliberately qualify rollback-verification failure for Clothing Fit;
+6. remove or isolate historical development authority machinery only after the new seam passes;
+7. remove unnecessary diagnostic/development logging;
+8. run focused post-cleanup regression.
 
 Do not clean the old authority machinery in the same change that first proves the new seam.
 
@@ -942,6 +1085,7 @@ CPM is ready to enter K when:
 - the production CPM authority path uses only the canonical broker;
 - `cpm_compat_v1` parity is established;
 - generation reauthorization is established;
+- late operation helpers consume operation authority contexts;
 - open-window replacement behavior is established;
 - no idle CPM lease exists;
 - Fit generation behavior is established;
@@ -985,9 +1129,9 @@ K proves the product workflow.
 
 L proves the actual installed release.
 
-## 25. Evidence and reading order for Astra
+## 25. Evidence and reading order for reviewers
 
-Astra should establish current governing state before reading historical architecture prose.
+Reviewers should establish current governing state before reading historical architecture prose.
 
 ### CPM repository
 
@@ -1040,23 +1184,17 @@ Git history begins with the surviving audited G18AN baseline. Earlier checkpoint
 
 Raw development evidence is intentionally excluded from the public repository.
 
-## 27. Two remaining Astra challenge points
+## 27. Resolved adversarial challenge points
 
-The architecture review loop closes with exactly two deliberate adversarial questions still open.
+The previous checkpoint left two deliberate challenge points open. Both are resolved.
 
-### A. Consumer-owned projection boundary
+### A. Consumer-owned projection boundary — approved
 
-Astra should independently determine whether any hidden broker/cohort/package invariant makes a CPM-owned projection builder unsafe despite the documented builder extension point.
+No hidden broker, cohort, or package invariant was found that makes a CPM-owned projection builder unsafe. The unchanged J-qualified shared package is preserved. The approval is conditioned on the callback qualification obligations in §6 and Suite 2.
 
-The default is to preserve the unchanged J-qualified shared package unless evidence shows a correctness reason not to.
+### B. Lease-release-before-mutation boundary — corrected
 
-### B. Lease-release-before-mutation boundary
-
-Astra should trace each migrated semantic-dependent CPM operation and determine whether all authority-dependent planning is truly complete before the proposed short lease is released.
-
-If an operation still requires authority after that point, move that operation's release boundary later.
-
-Do not globally retain long leases without evidence.
+The single release-after-planning model is replaced by operation-bound authority contexts with operation-specific release rules (§14). Clothing Fit retains its stage lease through post-stage verification (§15).
 
 ## 28. Controlling implementation statement
 
@@ -1078,11 +1216,18 @@ CPM pure semantic scope
     + reconstructed exact/ascii-fold match semantics
     + G18AN-compatible semantic snapshot
 
+CPM operation authority context
+    = Master SHA
+    + generation/provenance identity
+    + projection contract identity
+    + captured membership, persistence facts, baselines
+    -> consumed by late operation helpers
+
 CPM product behavior
     = Body / Expression / Other / Review / Conflict
 ```
 
-The migration should preserve valid broker cache reuse rather than preventing it, preserve G18AN's existing semantic/signature contract, keep the shared package byte-stable, and avoid reopening already-qualified CPM mechanics.
+The migration should preserve valid broker cache reuse rather than preventing it, preserve G18AN's existing semantic/signature contract, bind late authority dependencies to captured operation context, keep the shared package byte-stable, and avoid reopening already-qualified CPM mechanics.
 
 ## Final checkpoint verdict
 
@@ -1092,18 +1237,18 @@ G18AN remains the correct behavioral migration baseline. CPM's qualified mutatio
 
 **B. Minimum migration plan**
 
-Implement one CPM-owned, broker-mediated, fold-family `cpm_compat_v1` projection; reconstruct exact G18AN answers in CPM; retain pure scopes without idle leases; reauthorize generation before semantic-dependent actions; pin one Fit to one generation.
+Implement one CPM-owned, broker-mediated, fold-family `cpm_compat_v1` projection; reconstruct exact G18AN answers in CPM; retain pure scopes without idle leases; reauthorize generation before semantic-dependent actions; capture a CPM Operation Authority Context per operation and release leases at operation-specific boundaries; pin one Fit to one generation, with a per-target stage lease held through post-stage verification.
 
 **C. Release blockers after migration**
 
-Close the CPM-specific projection/cache/freshness/rollback gates, clean historical authority and diagnostic machinery after the seam is proven, then enter K. Exact installation/release qualification remains L.
+Pass the four focused suites and gates C7–C10, close the rollback-verification failure gates, clean historical authority and diagnostic machinery after the seam is proven, then enter K. Exact installation/release qualification remains L.
 
-**D. Evidence Astra should inspect**
+**D. Evidence reviewers should inspect**
 
 Current CPM G18AN + Engineering Notes + this handoff, and current Animation Groups Master production Normalizer + runtime/broker/cohort/views/bootstrap + F/G/I/J evidence.
 
-**E. Things Astra should explicitly not reopen**
+**E. Things that must not be reopened**
 
-Do not reopen settled CPM mutation sequencing, generic scaling, indexed capture, identity, exact-set compatibility, miss-only Review, structural Fit mapping, per-target transaction staging, modal behavior, or the old Body Save performance investigation without contradictory evidence.
+Do not reopen Normalizer F/G/I/J, RC7 transaction ordering, generic scaling, indexed Body capture, exact-set compatibility, rename identity, DME resolution, miss-only Review, structural Fit mapping, per-target transaction staging, modal scheduling, Qt row ownership, or the old Body Save performance investigation without contradictory evidence.
 
-The only intentional architecture challenges remaining are the consumer-owned projection boundary and the lease-release-before-mutation boundary.
+Both deliberate architecture challenges are resolved. This handoff is the controlling implementation specification.
