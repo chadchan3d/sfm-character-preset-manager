@@ -1,3 +1,5 @@
+> **Archived:** development has moved to `chadchan3d/sfm-animation-groups-master` (SFM Character Tools); this repository is a closed source archive at `390e01e` -- see `cpm/baseline/` and `docs/qualification/` there, as of commit `e080daa`.
+
 **Reviewer:** Astra
 **Date:** 2026-09-26
 **Reviewed pins:** CPM `2c905fb` / Master `9d200e3`

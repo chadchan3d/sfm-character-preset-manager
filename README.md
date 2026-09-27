@@ -1,3 +1,5 @@
+> **Archived.** Development has moved to `chadchan3d/sfm-animation-groups-master` (SFM Character Tools). This repository is a closed source archive at `390e01e`. The G18AN baseline lives there at `cpm/baseline/` and the convergence documents in `docs/qualification/`, as of commit `e080daa`.
+
 # SFM Character Preset Manager
 
 SFM Character Preset Manager is a Source Filmmaker utility for saving and reusing character body state while keeping facial expressions separate.

@@ -1,3 +1,5 @@
+> **Archived:** development has moved to `chadchan3d/sfm-animation-groups-master` (SFM Character Tools); this repository is a closed source archive at `390e01e` -- see `cpm/baseline/` and `docs/qualification/` there, as of commit `e080daa`.
+
 # Character Preset Manager → SFM Character Tools Integration Handoff
 
 **Status:** Controlling CPM convergence implementation specification
